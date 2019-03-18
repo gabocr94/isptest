@@ -40,3 +40,42 @@ Using Asterisk/Pystrix:
 	
 	Hang up.
 	
+Requirements
+---
+This applications uses mysql client, before running migrations run the following line
+to prevent any fail.
+    
+        sudo apt-get install python-dev default-libmysqlclient-dev
+        
+Now you can run the requirements file into your virtual environment:
+        
+        pip install -r requirements.txt
+ 
+Database
+--
+
+MySql 8.0 is the chosen database for this project. Before running initial migrations,
+make sure that you change the database configuration in Settings.py file:
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '[YOUR_SCHEMA]',
+        'USER': '[YOUR_USER]',
+        'PASSWORD': '[USER_PW]',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+```
+
+       
+Migrations
+---
+
+When you already set up your database and connection is working, you are ready to migrate models into your db.
+
+    python manage.py migrate
+    
+    
