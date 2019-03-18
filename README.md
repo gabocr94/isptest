@@ -3,13 +3,20 @@ Test for django rest framework and local IVR calls.
 
 Description
 ----
-A rest service for an internet service provider (ISP). This service will feed a website where users can register, make and check payments, get information such as own profile, internet plans and speeds, payment dates, change plans and ubsubscribe from the service.
+The application will set up a django rest service where users will be able to register,
+and purchase an internet plan between a few options. It is a subscription based plan, so users will have to pay monthly.
 
-Also the service feeds a IVR where users are able to make payments, check next payment date and amount or get information about plans and speeds.
+When a user registers, and purchases a plan, the application creates a new contract for that customer,
+with its personal information and the plan data.
+
+Customers will be able to manage personal information, change plans, pay and unsubscribe from a website connected to the rest service.
+Also an IVR call service will be set up for users to pay throughout their phones, check their next payment amount and date .
+
+
 
 Solution
 -----
-First, using django rest framework:
+First, using django framework:
 	
 	Register and login will use Django authentication.
 	The models will be Customer, Plan, Contract and Payment.
@@ -17,6 +24,9 @@ First, using django rest framework:
 	Use stripe to manage payments.
 	Using POST code to send data to the service, and GET to retrieve data from it.
 	Admins will use django admin site to manage plans and prices.
+	Mysql database to save models.
+	Logging 
+    The application will gather information from external forms and response in JSON objects.
 	
 Using Asterisk/Pystrix:
 
