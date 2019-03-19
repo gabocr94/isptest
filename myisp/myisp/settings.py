@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ispservice',
     'rest_framework',
+    'ispUI',
+    'ispIVR'
 ]
 
 MIDDLEWARE = [

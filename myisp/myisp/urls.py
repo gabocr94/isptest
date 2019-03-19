@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from ispUI import urls as ui_urls
+from ispservice import urls as drf_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'^api-auth/', include('rest_framework.urls'))
+    path('', include(ui_urls)),
+    path('', include(drf_urls))
 ]

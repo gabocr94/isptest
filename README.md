@@ -78,4 +78,8 @@ When you already set up your database and connection is working, you are ready t
 
     python manage.py migrate
     
-    
+Basic Configuration
+---
+Before running the application, create an admin user by running the following line:
+
+    python manage.py createsuperuser
