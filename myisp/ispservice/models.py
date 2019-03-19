@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -8,7 +9,7 @@ class Customer(models.Model):
     lastname1 = models.CharField(max_length=25)
     lastname2 = models.CharField(max_length=25)
     email = models.EmailField()
-
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     @property
     def full_name(self):
         return "%s %s %s"(self.name, self.lastname1, self.lastname2)
