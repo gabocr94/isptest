@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Customer, Plan, Contract
+from .models import Customer, Plan, Contract, Payment
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -36,3 +36,16 @@ class Contract_Serializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = '__all__'
+
+class Payments_Serializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Payment
+        fields = (
+            'contract_id',
+            'cc_number',
+            'cvc',
+            'exp_date',
+            'amount',
+        )

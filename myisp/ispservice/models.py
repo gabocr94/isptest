@@ -47,8 +47,9 @@ class Contract(models.Model):
 
 
 class Payment(models.Model):
-    payment_date = models.DateField(auto_now=False)
-    cc_number = models.PositiveIntegerField(default=0)
+    payment_date = models.DateField(auto_now_add=True)
+    cc_number = models.CharField(max_length=20, default=0)
     exp_date = models.CharField(max_length=4)
+    cvc = models.CharField(max_length=3,default=0)
     amount = models.PositiveIntegerField(default=0)
     contract_id = models.ForeignKey(Contract, on_delete=models.CASCADE)

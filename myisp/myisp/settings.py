@@ -53,6 +53,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#Stripe Config
+STRIPE_SECRET_KEY = 'sk_test_QN3kK671MeFRZZLSZunbIKjH'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_cCb0gLMsng6mHf24m0IHnuCy'
+
+
 ROOT_URLCONF = 'myisp.urls'
 
 TEMPLATES = [
