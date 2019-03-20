@@ -9,10 +9,15 @@ class Customer(models.Model):
     lastname1 = models.CharField(max_length=25)
     lastname2 = models.CharField(max_length=25)
     email = models.EmailField()
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default="")
+
     @property
-    def full_name(self):
-        return "%s %s %s"(self.name, self.lastname1, self.lastname2)
+    def customer_fullname(self):
+        return " ".join([self.name, self.lastname1, self.lastname2])
+
+    @property
+    def username(self):
+        return self.user.username.lower()
 
 
 class Plan(models.Model):
@@ -22,12 +27,13 @@ class Plan(models.Model):
     i_speed = models.PositiveSmallIntegerField(default=0)
 
     @property
-    def get_speed(self):
-        return "%s Mbs"(self.i_speed)
+    def plan_speed(self):
+        return str(self.i_speed) +' MBS'
+
 
 
 class Contract(models.Model):
-    id_contract = models.CharField(max_length=30, primary_key=True)
+    id_contract = models.PositiveIntegerField(primary_key=True, default=0)
     id_customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     id_plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     creation_date = models.DateField(auto_now_add=True)
