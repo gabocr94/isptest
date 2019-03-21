@@ -6,9 +6,10 @@ from .models import Customer, Plan, Contract, Payment
 
 class CustomerSerializer(serializers.ModelSerializer):
     username = serializers.ReadOnlyField()
+    email = serializers.ReadOnlyField()
     class Meta:
         model = Customer
-        exclude=('user',)
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -19,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 class Customer_List_Srlzr(serializers.ModelSerializer):
     customer_fullname = serializers.ReadOnlyField()
     username = serializers.ReadOnlyField()
-
+    email = serializers.ReadOnlyField()
     class Meta:
         model = Customer
         fields = ('id_card','customer_fullname','username','email')
@@ -39,6 +40,7 @@ class Contract_Serializer(serializers.ModelSerializer):
 
 class Payments_Serializer(serializers.ModelSerializer):
 
+    paid = serializers.ReadOnlyField()
 
     class Meta:
         model = Payment
@@ -48,4 +50,5 @@ class Payments_Serializer(serializers.ModelSerializer):
             'cvc',
             'exp_date',
             'amount',
+            'paid'
         )

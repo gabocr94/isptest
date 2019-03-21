@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'ispservice',
     'rest_framework',
     'ispUI',
-    'ispIVR'
+    'ispIVR',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -51,12 +52,23 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 #Stripe Config
 STRIPE_SECRET_KEY = 'sk_test_QN3kK671MeFRZZLSZunbIKjH'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_cCb0gLMsng6mHf24m0IHnuCy'
 
+
+#CORS Config
+#Currently allowing all domains
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = (
+    'GET',
+    'POST',
+)
 
 ROOT_URLCONF = 'myisp.urls'
 

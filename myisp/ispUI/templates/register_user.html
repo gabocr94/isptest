@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+{% load static %}
+
+{% block content %}
+<div class="container" style="margin-top:5%" >
+    <h4>Create Your User</h4>
+    </br>
+    <form method="POST">
+        <div class="form-group">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-3">
+                    <input type="text" class="form-control" placeholder="Username" id="tx_username" name="username" required>
+                </div>
+
+            </div>
+        </br>
+             <div class="row">
+                <div class="col-lg-6 col-lg-offset-3">
+                    <input type="password" class="form-control" id="tx_passw" placeholder="Password" name="password" required>
+                </div>
+
+            </div>
+
+            </br>
+             <div class="row">
+                <div class="col-lg-6 col-lg-offset-3">
+                    <input type="text" class="form-control" id="tx_email" placeholder="Enter Your Email" name="email" required>
+                </div>
+
+            </div>
+            </br>
+            <input type="submit" class="btn btn-primary" id="btn_send" value="Save">
+        </div>
+    </form>
+</div>
+
+{%endblock%}
+
+{% block js %}
+    <script src="{% static 'js/user_main.js' %}"></script>
+{%endblock%}

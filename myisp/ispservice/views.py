@@ -20,13 +20,22 @@ from .serializers import CustomerSerializer, UserSerializer, Customer_List_Srlzr
 # Customer classes
 class Register_Customer(CreateAPIView):
     serializer_class = CustomerSerializer
-    permission_classes = (IsAuthenticated,)
+    http_method_names = ['post','get',]
+    def get_user_mail(self):
+
+        c_user = User.objects.all()
+        c_user = c_user.filter(pk=self.user)
+
+        return c_user['email']
 
     def post(self, request, *args, **kwargs):
 
         try:
             srl = self.get_serializer(data=request.data)
+            self.user = request.data['user']
+            srl.data['email'] = self.get_user_mail()
             if srl.is_valid():
+
                 srl.save()
                 return Response(srl.data, status=status.HTTP_201_CREATED)
             else:
@@ -43,11 +52,11 @@ class Register_User(CreateAPIView):
     def post(self, request, *args, **kwargs):
 
         try:
-            srl = self.get_serializer(data=request.data)
-            if srl.is_valid():
+            userSrl = self.get_serializer(data=request.data)
+            if userSrl.is_valid():
 
-                srl.save()
-                return Response(srl.data, status=status.HTTP_201_CREATED)
+                userSrl.save()
+                return Response(userSrl.data, status=status.HTTP_201_CREATED)
             else:
                 return Response('Information not valid', status=status.HTTP_400_BAD_REQUEST)
 
@@ -202,6 +211,7 @@ class Get_Contract(ListAPIView):
 
 class Create_Payment(CreateAPIView):
     serializer_class = Payments_Serializer
+    permission_classes = (IsAuthenticated,)
 
     def __init__(self):
         stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -232,6 +242,7 @@ class Create_Payment(CreateAPIView):
                 )
 
                 if stripe_response:
+                    serializer.validated_data['paid']=stripe_response['paid']
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
@@ -277,7 +288,7 @@ class List_Customer_Payments(ListAPIView):
     def get_queryset(self):
 
         payments = Payment.objects.all()
-        payments = payments.filter(contract_id__id_customer=self.pk)
+        payments = payments.filter(contract_id__id_customer=self.pk, contract_id__id_customer__user = self.request.user)
         return payments
 
     def list(self, request, *args, **kwargs):
@@ -298,7 +309,7 @@ class Get_Payment(ListAPIView):
 
     def get_queryset(self):
         contract = Contract.objects.all()
-        contract = contract.filter(pk=self.pk, )
+        contract = contract.filter(pk=self.pk, contract_id__id_customer__user = self.request.user)
         return contract
 
     def list(self, request, *args, **kwargs):

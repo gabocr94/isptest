@@ -8,8 +8,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=30)
     lastname1 = models.CharField(max_length=25)
     lastname2 = models.CharField(max_length=25)
-    email = models.EmailField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default="")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default="")
 
     @property
     def customer_fullname(self):
@@ -19,6 +18,9 @@ class Customer(models.Model):
     def username(self):
         return self.user.username.lower()
 
+    @property
+    def email(self):
+        return self.user.email
 
 class Plan(models.Model):
     # Internet speed will be measured in Megabits per second (mbs)
@@ -53,3 +55,6 @@ class Payment(models.Model):
     cvc = models.CharField(max_length=3,default=0)
     amount = models.PositiveIntegerField(default=0)
     contract_id = models.ForeignKey(Contract, on_delete=models.CASCADE)
+    paid = models.BooleanField(default=False)
+
+
