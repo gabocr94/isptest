@@ -1,7 +1,6 @@
 $('#btn_send').click(function(){
 
 try{
-console.log('clicked meh');
 var params = {};
 params.username = $('#tx_username').val();
 params.password = $('#tx_passw').val();

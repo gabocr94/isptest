@@ -28,7 +28,6 @@ class Register_Customer(CreateAPIView):
 
         try:
             srl = self.get_serializer(data=request.data)
-            self.user = request.data['user']
             print(self.request.user)
             srl.data['email'] = self.request.user.email
             srl.data['user'] = self.request.user
