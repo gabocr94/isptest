@@ -19,4 +19,5 @@ urlpatterns = [
     path('api/details/payment/<int:pk>', Get_Payment.as_view(), name='contract_details'),
     path('api/list/payments', List_All_Payments.as_view(), name='payments_list'),
     path('api/list/mypayments/<int:pk>', List_Customer_Payments.as_view(), name='my_payments_list'),
+
 ]

@@ -2,33 +2,22 @@ $('#btn_send').click(function(){
 
 try{
 console.log('clicked meh');
-var params = {}
+var params = {};
 params.username = $('#tx_username').val();
 params.password = $('#tx_passw').val();
 params.email = $('#tx_email').val();
 params.csrftoken = getCookie('csrftoken');
 
-var host = 'http://localhost:8000/'
-console.log(params);
-$.ajax({
-            url : host+"api/create/user", // the endpoint
-            type : "POST", // http method
-            data : params,
-            success : function(json, textMsg, xhr) {
-                window.location.href = host+'customer/register';
-            },
-            error : function(xhr,errmsg,err) {
-                alert('Opps! Something is wrong')
-                console.log('Error:'+err)
-            }
-        });
-}
+var host = 'http://localhost:8000/';
 
+
+$.post( host+"api/create/user", params, function() {
+  window.location.href = host+'customer/register';
+});
+}
 catch (err){
-   console.log(err)
+   alert(err);
 }
-
-
 })
 
 

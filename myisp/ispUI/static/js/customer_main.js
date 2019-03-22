@@ -20,7 +20,8 @@ $.ajax({
                 alert('Registered succesfully.')
             },
             error : function(xhr,errmsg,err) {
-                alert('Opps! Something is wrong: '+ err)
+                alert('Opps! Something is wrong: '+ errmsg);
+                console.log(xhr);
             }
         });
 }

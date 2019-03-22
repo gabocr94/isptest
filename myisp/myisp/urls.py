@@ -22,5 +22,6 @@ from ispservice import urls as drf_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(ui_urls)),
-    path('', include(drf_urls))
+    path('', include(drf_urls)),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

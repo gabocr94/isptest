@@ -1,4 +1,5 @@
 import stripe
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render
 
@@ -7,7 +8,7 @@ from django.shortcuts import render
 # Register customers
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from django.conf import settings
 from stripe.error import StripeError
@@ -20,22 +21,18 @@ from .serializers import CustomerSerializer, UserSerializer, Customer_List_Srlzr
 # Customer classes
 class Register_Customer(CreateAPIView):
     serializer_class = CustomerSerializer
-    http_method_names = ['post','get',]
-    def get_user_mail(self):
-
-        c_user = User.objects.all()
-        c_user = c_user.filter(pk=self.user)
-
-        return c_user['email']
+    permission_classes = [AllowAny,]
+    http_method_names = ['post','get' ]
 
     def post(self, request, *args, **kwargs):
 
         try:
             srl = self.get_serializer(data=request.data)
             self.user = request.data['user']
-            srl.data['email'] = self.get_user_mail()
+            print(self.request.user)
+            srl.data['email'] = self.request.user.email
+            srl.data['user'] = self.request.user
             if srl.is_valid():
-
                 srl.save()
                 return Response(srl.data, status=status.HTTP_201_CREATED)
             else:
@@ -52,11 +49,21 @@ class Register_User(CreateAPIView):
     def post(self, request, *args, **kwargs):
 
         try:
+            # logout any current user
+            logout(request)
+
             userSrl = self.get_serializer(data=request.data)
             if userSrl.is_valid():
-
-                userSrl.save()
-                return Response(userSrl.data, status=status.HTTP_201_CREATED)
+                new_user = User.objects.create_user(
+                    username=userSrl.validated_data['username'],
+                    password=userSrl.validated_data['password']
+                )
+                if new_user is not None:
+                    login(request, new_user)
+                    return Response(userSrl.data, status=status.HTTP_201_CREATED)
+                else:
+                    print('User not found')
+                    return Response('User not found', status=status.HTTP_404_NOT_FOUND)
             else:
                 return Response('Information not valid', status=status.HTTP_400_BAD_REQUEST)
 
@@ -242,7 +249,7 @@ class Create_Payment(CreateAPIView):
                 )
 
                 if stripe_response:
-                    serializer.validated_data['paid']=stripe_response['paid']
+                    serializer.validated_data['paid'] = stripe_response['paid']
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
@@ -283,12 +290,12 @@ class List_All_Payments(ListAPIView):
 
 class List_Customer_Payments(ListAPIView):
     serializer_class = Payments_Serializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
 
         payments = Payment.objects.all()
-        payments = payments.filter(contract_id__id_customer=self.pk, contract_id__id_customer__user = self.request.user)
+        payments = payments.filter(contract_id__id_customer=self.pk, contract_id__id_customer__user=self.request.user)
         return payments
 
     def list(self, request, *args, **kwargs):
@@ -303,13 +310,14 @@ class List_Customer_Payments(ListAPIView):
             print(e)
             return Response('Data not found', status=status.HTTP_404_NOT_FOUND)
 
+
 class Get_Payment(ListAPIView):
     serializer_class = Payments_Serializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         contract = Contract.objects.all()
-        contract = contract.filter(pk=self.pk, contract_id__id_customer__user = self.request.user)
+        contract = contract.filter(pk=self.pk, contract_id__id_customer__user=self.request.user)
         return contract
 
     def list(self, request, *args, **kwargs):
@@ -321,4 +329,3 @@ class Get_Payment(ListAPIView):
         except Exception as e:
             print(e)
             return Response('Data not found', status=status.HTTP_404_NOT_FOUND)
-
